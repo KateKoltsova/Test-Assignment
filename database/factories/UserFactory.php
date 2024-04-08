@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Position;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,11 +24,13 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $position = Position::inRandomOrder()->first();
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'position_id' => $position->id,
+            'name' => Str::limit(fake()->unique()->userName(), 60),
+            'email' => fake()->unique()->freeEmail(),
+            'phone' => fake()->unique()->numerify('+380#########'),
+            'photo' => fake()->imageUrl(70, 70, 'people', true, null, false, 'jpeg'),
             'remember_token' => Str::random(10),
         ];
     }
@@ -37,7 +40,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

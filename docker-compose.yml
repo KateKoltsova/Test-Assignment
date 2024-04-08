@@ -10,13 +10,18 @@ services:
             - ./:/var/www/Test-Assignment
         depends_on:
             - php
+    mysql:
+        image: mysql:8.0
+        ports:
+            - "3316:3306"
+        env_file:
+            - mysql.env
 
     php:
         image: php:8.1-fpm-alpine
         volumes:
             - ./:/var/www/Test-Assignment
-        command: /bin/sh -c "docker-php-ext-install mysqli pdo pdo_mysql \
-            && php-fpm"
+        command: /bin/sh -c "docker-php-ext-install mysqli pdo pdo_mysql && php-fpm"
 
     composer:
         image: composer
