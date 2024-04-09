@@ -3,17 +3,19 @@
 namespace app\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserIndexRequest;
+use App\Http\Requests\UserShowRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(UserRequest $request)
+    public function index(UserIndexRequest $request)
     {
         $page = $request->input('page', 1);
         $perPage = $request->input('count', 5);
@@ -65,9 +67,21 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(UserShowRequest $request)
     {
-        //
+        $params = $request->validated();
+
+        $user = User::select('users.*', 'positions.position as position', 'positions.id as position_id')
+            ->where('users.id', $params['user_id'])
+            ->join('positions', 'users.position_id', '=', 'positions.id')
+            ->first();
+
+        $response = [
+            'success' => true,
+            'user' => UserResource::make($user)
+        ];
+
+        return response()->json($response);
     }
 
     /**
