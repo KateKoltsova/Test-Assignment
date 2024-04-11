@@ -27,7 +27,7 @@ class UserFactory extends Factory
         $position = Position::inRandomOrder()->first();
         return [
             'position_id' => $position->id,
-            'name' => Str::limit(fake()->unique()->userName(), 60),
+            'name' => Str::limit(fake()->firstName, 60),
             'email' => fake()->unique()->freeEmail(),
             'phone' => fake()->unique()->numerify('+380#########'),
             'photo' => fake()->imageUrl(70, 70, 'people', true, null, false, 'jpeg'),

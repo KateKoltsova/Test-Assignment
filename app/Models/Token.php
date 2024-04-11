@@ -5,12 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Position extends Model
+class Token extends Model
 {
     use HasFactory;
 
-    public function users()
-    {
-        return $this->hasMany(User::class, 'position_id', 'id');
-    }
+    protected $fillable = [
+        'token',
+        'revoke',
+        'expired_at',
+    ];
 }

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 60);
-            $table->string('email')->unique();
-            $table->string('phone', 13)->unique();
-            $table->string('photo');
-            $table->rememberToken()->unique();
+            $table->string('token');
+            $table->boolean('revoke')->default(false);
+            $table->dateTime('expired_at')->default(now()->addMinutes(40));
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('register_tokens');
     }
 };
