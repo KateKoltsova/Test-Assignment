@@ -5,9 +5,9 @@
 @endsection
 
 @section('content')
-    <ul>
+    <ol class="list-group list-group-numbered">
         @foreach($positions as $position)
-            <li>{{ $position['position'] }}</li>
+            <li class="list-group-item">{{ $position['position'] }}</li>
         @endforeach
-    </ul>
+    </ol>
 @endsection

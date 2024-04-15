@@ -18,6 +18,7 @@ Route::get('/', function () {
 })->name('index');
 
 Route::get('/getToken', [\App\Http\Controllers\MainController::class, 'getToken'])->name('getToken');
+Route::get('/register', [\App\Http\Controllers\MainController::class, 'showForm'])->name('form');
 Route::post('/register', [\App\Http\Controllers\MainController::class, 'register'])->name('register');
 Route::get('/users', [\App\Http\Controllers\MainController::class, 'usersList'])->name('users.list');
 Route::get('/users/{id}', [\App\Http\Controllers\MainController::class, 'userById'])->name('users.view');

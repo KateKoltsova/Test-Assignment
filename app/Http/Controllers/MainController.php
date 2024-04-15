@@ -25,13 +25,24 @@ class MainController extends Controller
 
             $token = $responseGetToken['token'];
 
-            $positions = $this->getPositions();
-
-            return view('register-form', compact('token', 'positions'));
+            return view('token', compact('token'));
 
         } catch (RequestException $e) {
             $message = json_decode($e->getResponse()->getBody(), true);
             return $message['message'];
+
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function showForm(Request $request)
+    {
+        try {
+            $token = $request->input('token');
+            $positions = $this->getPositions();
+
+            return view('register-form', compact('token', 'positions'));
 
         } catch (Exception $e) {
             return $e->getMessage();
@@ -76,8 +87,15 @@ class MainController extends Controller
 
         } catch (RequestException $e) {
             $response = json_decode($e->getResponse()->getBody(), true);
-            $fails = $response['fails'];
-            return redirect()->back()->withErrors($fails)->withInput();
+
+            if (isset($response['fails'])) {
+                $fails = $response['fails'];
+                return redirect()->back()->withErrors($fails)->withInput();
+
+            } else {
+                $fails['token'] = $response['message'];
+                return redirect()->back()->withErrors($fails)->withInput();
+            }
 
         } catch (Exception $e) {
             return $e->getMessage();
@@ -88,7 +106,7 @@ class MainController extends Controller
     {
         try {
             $page = $request->input('page') ?? 1;
-            $per_page = $request->input('count') ?? 15;
+            $per_page = $request->input('count') ?? 5;
 
             if ($request->input('show_more')) {
                 $page = 1;
